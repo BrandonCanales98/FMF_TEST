@@ -1,0 +1,148 @@
+<app-header></app-header>
+<div class="container">
+    <ng-wizard [config]="config" (stepChanged)="stepChanged($event)">
+
+        <ng-wizard-step [title]="'Paso 1'" [description]="'Paso 1: Datos Generales'" [canEnter]="isValidTypeBoolean"
+            [canExit]="isValidFunctionReturnsBoolean.bind(this)">
+            <br>
+            <hr>
+            <h3>Datos generales</h3>
+            <form (ngSubmit)="addJugador(newJugador.club,newJugador.nacionalidad,newJugador.genero)" ngNativeValidate>
+                <div class="form-group">
+                    <label for="nombre">Nombre</label>
+                    <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre"
+                        [(ngModel)]="newJugador.nombre" required>
+
+                </div>
+                <div class="form-group">
+                    <label for="app">Apellido Paterno</label>
+                    <input type="text" class="form-control" id="app" name="app" placeholder="Apellido Paterno"
+                        [(ngModel)]="newJugador.app" required>
+                </div>
+                <div class="form-group">
+                    <label for="apm">Apellido Materno</label>
+                    <input type="text" class="form-control" id="apm" name="apm" placeholder="Apellido Materno"
+                        [(ngModel)]="newJugador.apm" required>
+                </div>
+                <div class="form-group">
+                    <label for="fechaNac">Fecha de nacimiento</label>
+                    <input type="date" class="form-control" id="fechaNac" name="fechaNac"
+                        [(ngModel)]="newJugador.fechaNac" (change)="validaEdad(newJugador.fechaNac)" required>
+                </div>
+                <div class="form-group">
+                    <label for="genero">Género</label>
+                    <select [(ngModel)]="newJugador.genero" id="genero" name="gene" class="form-control" required>
+                        <option *ngFor="let genero of generoArray" value="{{genero.id}}">{{genero.nombre}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="nacionalidad">Nacionalidad</label>
+                    <select [(ngModel)]="newJugador.nacionalidad" name="nacionalidad" id="nacionalidad"
+                        class="form-control" required>
+
+                        <option *ngFor="let nacionalidad of nacionalidadArray" value="{{nacionalidad.id}}">
+                            {{nacionalidad.nombre}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="club">Club</label>
+                    <select name="club" id="club" name="club" class="form-control" [(ngModel)]="newJugador.club"
+                        required>
+                        <option *ngFor="let club of clubArray" value="{{club.id}}">{{club.nombre}}</option>
+                    </select>
+                </div>
+                <div class="form-group" id="divRfc" hidden>
+                    <label for="rfc">R.F.C.</label>
+                    <input type="text" class="form-control" id="rfc" name="rfc" placeholder="R.F.C."
+                        [(ngModel)]="newJugador.rfc">
+                </div>
+                <div class="form-group">
+                    <label for="ocupacion">Ocupación</label>
+                    <input type="text" class="form-control" id="ocupacion" name="ocupacion" placeholder="Ocupación"
+                        [(ngModel)]="newJugador.ocupacion" required>
+                </div>
+
+
+<hr>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary">Enviar información</button>
+                </div>
+
+            </form>
+        </ng-wizard-step>
+
+
+        <ng-wizard-step [title]="'Paso 2'" [description]="'Paso 2: Visualización de ficha'"
+            [canEnter]="isValidFunctionReturnsObservable.bind(this)"
+            [canExit]="isValidFunctionReturnsBoolean.bind(this)">
+            <br>
+            <hr>
+            <h3>Visualización de ficha</h3>
+
+            <div class="row">
+
+                <div class="col-lg-12">
+
+                    <!-- Default Card Example -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-success">
+                            <h3 style="display: inline;">Federación Mexicana de Fútbol</h3>
+                            <img src="../../../assets/img/logo_fmf.png" alt="" width="5%" class="float-right">
+
+
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <img id="logo_club" alt="..." />
+                                    <img alt="..." src="../../../assets/img/2074125.png" class="img-fluid" />
+                                </div>
+                                <div class="col-md-8" id="ficha" #ficha>
+                                    <h1>{{newJugador.nombre}} {{newJugador.app}} {{newJugador.apm}}</h1>
+                                    <div>
+                                        <h3><b>Fecha de nacimiento: </b> {{newJugador.fechaNac}}</h3>
+                                        <h3><b>Género: </b> <label id="genero_text"></label></h3>
+                                        <h3><b>Nacionalidad: </b> <label id="nacionalidad_text"></label> </h3>
+                                        <h3><b>Club: </b><label id="club_text"></label></h3>
+                                        <h3 *ngIf="newJugador.rfc"><b>R.F.C: </b>{{newJugador.rfc}}</h3>
+                                        <h3><b>Ocupación: </b>{{newJugador.ocupacion}}</h3>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                </div>
+
+
+            </div>
+            <hr>
+            <div class="text-center">
+                <button (click)="showNextStep()" class="btn btn-primary">Ir a descarga</button>
+            </div>
+
+
+
+        </ng-wizard-step>
+
+        <ng-wizard-step [title]="'Paso 3'" [description]="'Paso 3: Generación de ficha (PDF)'"
+            [canEnter]="isValidFunctionReturnsObservable.bind(this)"
+            [canExit]="isValidFunctionReturnsBoolean.bind(this)">
+            <br>
+            <hr>
+            <h3>Generación de ficha (PDF)</h3>
+
+            <h4>Ha concluido el proceso, si desea, descargue el archivo PDF con los datos registrados.</h4>
+            <hr>
+            <div class="text-center">
+            <button (click)="generaPdf()" class="btn btn-success">Descargar</button>
+        </div>
+
+        </ng-wizard-step>
+
+
+    </ng-wizard>
+</div>
